@@ -22,7 +22,7 @@ class StoreEconomicGroupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => "required|unique",
+            "name" => "required|unique:economic_groups,name",
         ];
     }
 

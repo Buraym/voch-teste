@@ -12,8 +12,7 @@ class UpdateEconomicGroupRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $economicGroup = EconomicGroup::find($this->route('group'));
-        return $economicGroup && $this->user()->can('update', $economicGroup);
+        return true;
     }
 
     /**
@@ -24,7 +23,7 @@ class UpdateEconomicGroupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => "required|unique",
+            "name" => "required|unique:economic_groups,name",
         ];
     }
 

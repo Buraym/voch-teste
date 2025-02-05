@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\EconomicGroup;
+use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\StoreEconomicGroupRequest;
 use App\Http\Requests\UpdateEconomicGroupRequest;
 
@@ -42,40 +43,60 @@ class EconomicGroupController extends Controller
     }
 
     /**
+     * Find economic group by name
+     *
+     * @param  FormRequest $request
+     * @return \App\Models\EconomicGroup
+     *
+     * @throws \Exception
+    */
+    public function search(FormRequest $request)
+    {
+        $query = $request->query('q'); // Obtém o parâmetro "q" da URL
+        
+        $groupsFound = $this->economicGroup->where("name", "LIKE", "%{$query}%")
+            ->get()
+            ->map(fn($group) => [$group->id, $group->name])
+            ->toArray();
+        
+        return redirect()->route("groups", $query == "" ? [] : compact("query", "groupsFound"));
+    }
+
+    /**
      * Store a newly created economic group in storage.
      */
     public function store(StoreEconomicGroupRequest $request)
     {
         $validatedRequest = $request->validated();
-        $economicGroup = $this->economicGroup->create($validatedRequest);
-        return response()->json($economicGroup, 201);
+        $this->economicGroup->create($validatedRequest);
+        return redirect()->route("groups");
     }
 
     /**
      * Update economic group atributes
      * @param App\Http\Requests\UpdateEconomicGroupRequest
-     * @param \App\Models\EconomicGroup
      * @return \App\Models\EconomicGroup
      * 
      * @throws \Exception
     */
-    public function update(UpdateEconomicGroupRequest $request, EconomicGroup $economicGroup)
+    public function update(UpdateEconomicGroupRequest $request, $id)
     {
-        $validatedRequest = $request->validated();
-        $this->economicGroup->updated($validatedRequest);
-        return response()->json(['message' => 'Grupo atualizado com sucesso!', 'updated_group' => $economicGroup], 200);
+        $economicGroup = EconomicGroup::findOrFail($id);
+        $validatedData = $request->validated();
+        $economicGroup->update($validatedData);
+        return redirect()->route("groups", ['message' => 'Grupo Econômico atualizado com sucesso!']);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(EconomicGroup $economicGroup)
+    public function destroy($id)
     {
-        $economicGroup = $this->economicGroup->find($economicGroup);
+        $economicGroup = $this->economicGroup->find($id);
         if ($economicGroup == null) {
-            return response()->json(["error"=> "Grupo não encontrado !"],404);
+            return redirect()->route("groups", ['error' => "Grupo não encontrado !"]);
         }
         $economicGroup->delete();
-        return response()->json(["message" => "Grupo removido com sucesso !"], 200);
+        return redirect()->route("groups", ["message" => "Grupo removido com sucesso !"]);
     }
 }
