@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('economic_groups', function (Blueprint $table) {
+        Schema::create('flags', function (Blueprint $table) {
             $table->id();
             $table->string("name")->unique();
+            $table->unsignedBigInteger('economic_group_id');
             $table->timestamps();
+
+            $table->foreign('economic_group_id')->references('id')->on('economic_groups');
         });
     }
 
@@ -23,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('economic_groups');
+        Schema::dropIfExists('flag');
     }
 };

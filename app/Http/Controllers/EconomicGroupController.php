@@ -64,6 +64,7 @@ class EconomicGroupController extends Controller
 
     /**
      * Store a newly created economic group in storage.
+     * @param \App\Http\Requests\StoreEconomicGroupRequest
      */
     public function store(StoreEconomicGroupRequest $request)
     {
@@ -75,13 +76,14 @@ class EconomicGroupController extends Controller
     /**
      * Update economic group atributes
      * @param App\Http\Requests\UpdateEconomicGroupRequest
+     * @param string id
      * @return \App\Models\EconomicGroup
      * 
      * @throws \Exception
     */
     public function update(UpdateEconomicGroupRequest $request, $id)
     {
-        $economicGroup = EconomicGroup::findOrFail($id);
+        $economicGroup = $this->economicGroup->findOrFail($id);
         $validatedData = $request->validated();
         $economicGroup->update($validatedData);
         return redirect()->route("groups", ['message' => 'Grupo Econômico atualizado com sucesso!']);
@@ -89,6 +91,8 @@ class EconomicGroupController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * @param string id
+     * @throws \Exception
      */
     public function destroy($id)
     {
