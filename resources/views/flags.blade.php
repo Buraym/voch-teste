@@ -2,7 +2,7 @@
     use \App\Models\Flag;
     $query = app('request')->input('query');
     $flagsFound = app('request')->input('flagsFound') ? app('request')->input('flagsFound')
-        : Flag::all()->map(fn($group) => [$flag->id, $flag->name, $flag->economic_group_id])->toArray();
+        : Flag::all()->map(fn($flag) => [$flag->id, $flag->name, $flag->economicGroup->name])->toArray();
 @endphp
 <x-app-layout>
     <x-slot name="header">

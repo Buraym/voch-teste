@@ -16,6 +16,19 @@
             <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">
                 *Nome deve ser único
             </p>
+            @if (count($economicGroup->flags) > 0) 
+            <div class="py-2 flex flex-col jsutify-start items center gap-2 mb-4">
+                <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">
+                    Bandeiras deste grupo
+                </p>
+                @foreach ($economicGroup->flags as $flag)
+                    <a href="{{ route('flag', $flag->id) }}" wire:navigate class="flex justify-center items-center h-10 rounded-lg hover:bg-gray-400 hover:text-gray-900 transition-all dark:bg-white hover">
+                        <i>{{ $flag->name }}</i>
+                    </a>
+                @endforeach
+            </div>
+            @endif
+            
             <div class="flex gap-2">
                 <x-primary-button class="max-w-36 flex justify-center text-center">
                     Atualizar

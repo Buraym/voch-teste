@@ -34,7 +34,7 @@ $logout = function (Logout $logout) {
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('flags')" :active="request()->routeIs('flags') || request()->routeIs('add-group') || request()->routeIs('group')" wire:navigate>
+                    <x-nav-link :href="route('flags')" :active="request()->routeIs('flags') || request()->routeIs('add-flag') || request()->routeIs('flag')" wire:navigate>
                         Bandeiras
                     </x-nav-link>
                 </div>

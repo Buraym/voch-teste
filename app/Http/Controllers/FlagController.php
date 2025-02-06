@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Flag;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\StoreFlagRequest;
-use App\Http\Requests\UpdateFlagRequest;
 
 class FlagController extends Controller
 {
@@ -51,11 +50,11 @@ class FlagController extends Controller
     */
     public function search(FormRequest $request)
     {
-        $query = $request->query('q'); // Obtém o parâmetro "q" da URL
+        $query = $request->query('q');
         
         $flagsFound = $this->flag->where("name", "LIKE", "%{$query}%")
             ->get()
-            ->map(fn($flag) => [$flag->id, $flag->name])
+            ->map(fn($flag) => [$flag->id, $flag->name, $flag->economicGroup->name])
             ->toArray();
         
         return redirect()->route("flags", $query == "" ? [] : compact("query", "flagsFound"));
@@ -74,16 +73,19 @@ class FlagController extends Controller
 
     /**
      * Update flag atributes
-     * @param App\Http\Requests\UpdateFlagRequest
+     * @param FormRequest
      * @param string id
-     * @return \App\Models\Flag
+     * @return Flag
      * 
      * @throws \Exception
     */
-    public function update(UpdateFlagRequest $request, $id)
+    public function update(FormRequest $request, $id)
     {
         $flag = $this->flag->findOrFail($id);
-        $validatedData = $request->validated();
+        $validatedData = $request->validateWithBag('flag', [
+            "name" => "required|unique:flags,name,".$id,
+            "economic_group_id" => "required|exists:economic_groups,id",
+        ]);
         $flag->update($validatedData);
         return redirect()->route("flags", ['message' => 'Bandeira atualizada com sucesso!']);
     }

@@ -52,7 +52,7 @@ class EconomicGroupController extends Controller
     */
     public function search(FormRequest $request)
     {
-        $query = $request->query('q'); // Obtém o parâmetro "q" da URL
+        $query = $request->query('q');
         
         $groupsFound = $this->economicGroup->where("name", "LIKE", "%{$query}%")
             ->get()
