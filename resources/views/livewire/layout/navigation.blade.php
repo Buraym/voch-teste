@@ -43,6 +43,11 @@ $logout = function (Logout $logout) {
                         Unidades
                     </x-nav-link>
                 </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('employees')" :active="request()->routeIs('employees') || request()->routeIs('add-employee') || request()->routeIs('employee')" wire:navigate>
+                        Colaboradores
+                    </x-nav-link>
+                </div>
             </div>
 
             <!-- Settings Dropdown -->
@@ -91,7 +96,27 @@ $logout = function (Logout $logout) {
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
-                {{ __('Dashboard') }}
+                Painel
+            </x-responsive-nav-link>
+        </div>
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('groups')" :active="request()->routeIs('groups') || request()->routeIs('add-group') || request()->routeIs('group')" wire:navigate>
+                Grupos econômicos
+            </x-responsive-nav-link>
+        </div>
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('flags')" :active="request()->routeIs('flags') || request()->routeIs('add-flag') || request()->routeIs('flag')" wire:navigate>
+                Bandeiras
+            </x-responsive-nav-link>
+        </div>
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('units')" :active="request()->routeIs('units') || request()->routeIs('add-unit') || request()->routeIs('unit')" wire:navigate>
+                Unidades
+            </x-responsive-nav-link>
+        </div>
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('employees')" :active="request()->routeIs('employees') || request()->routeIs('add-unit') || request()->routeIs('unit')" wire:navigate>
+                Colaboradores
             </x-responsive-nav-link>
         </div>
 
