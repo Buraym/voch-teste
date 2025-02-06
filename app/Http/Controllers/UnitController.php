@@ -54,7 +54,7 @@ class UnitController extends Controller
         
         $unitsFound = $this->unit->where("name", "LIKE", "%{$query}%")
             ->get()
-            ->map(fn($unit) => [$unit->id, $unit->name, $unit->social, $unit->cnpj, $unit->flag])
+            ->map(fn($unit) => [$unit->id, $unit->name, $unit->social, $unit->cnpj, $unit->flag->name])
             ->toArray();
         
         return redirect()->route("units", $query == "" ? [] : compact("query", "unitsFound"));
@@ -85,7 +85,11 @@ class UnitController extends Controller
         $validatedData = $request->validateWithBag('unit', [
             "name" => "required",
             "social" => "required",
-            "cnpj" => `required|regex:\d{2}\.?\d{3}\.?\d{3}\/?\d{4}\-?\d{2}|unique:unity,cnpj,`.$id,
+            "cnpj" => [
+                "required",
+                "regex:/^\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}$/",
+                "unique:unity,cnpj,".$id
+            ],
             "flag_id" => "required|exists:flags,id",
         ]);
         $unit->update($validatedData);

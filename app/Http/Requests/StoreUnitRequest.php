@@ -24,7 +24,11 @@ class StoreUnitRequest extends FormRequest
         return [
             "name" => "required",
             "social" => "required",
-            "cnpj" => `required|regex:\d{2}\.?\d{3}\.?\d{3}\/?\d{4}\-?\d{2}|unique:unity,cnpj`,
+            "cnpj" => [
+                "required",
+                "regex:/^\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}$/",
+                "unique:unity,cnpj"
+            ],
             "flag_id" => "required|exists:flags,id",
         ];
     }
