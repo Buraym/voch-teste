@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EconomicGroupController;
+use App\Http\Controllers\EmployeesController;
 use App\Http\Controllers\FlagController;
 use App\Http\Controllers\UnitController;
 use Illuminate\Http\Request;
@@ -35,4 +36,13 @@ Route::prefix("/units")->group(function() {
     Route::get('/{id}', [UnitController::class, 'show']);
     Route::put('/{id}', [UnitController::class, 'update'])->name("units.update");
     Route::delete('/{id}', [UnitController::class, 'destroy'])->name("units.destroy");
+});
+
+Route::prefix("/employees")->group(function() {
+    Route::get('/', [EmployeesController::class, 'index']);
+    Route::get('/search', [EmployeesController::class, 'search'])->name("employees.search");
+    Route::post('/', [EmployeesController::class, 'store'])->name("employees.store");
+    Route::get('/{id}', [EmployeesController::class, 'show']);
+    Route::put('/{id}', [EmployeesController::class, 'update'])->name("employees.update");
+    Route::delete('/{id}', [EmployeesController::class, 'destroy'])->name("employees.destroy");
 });

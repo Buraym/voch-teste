@@ -18,6 +18,10 @@ Route::middleware(['web', 'auth', 'verified'])->group(function() {
     Route::view('units', 'units')->name('units');
     Route::view('add-unit', 'add-unit')->name('add-unit');
     Route::view('unit/{id}', 'unit')->name('unit');
+
+    Route::view('employees', 'employees')->name('employees');
+    Route::view('add-employee', 'add-employee')->name('add-employee');
+    Route::view('employee/{id}', 'employee')->name('employee');
 });
     
 Route::view('profile', 'profile')
