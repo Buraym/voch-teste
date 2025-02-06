@@ -19,6 +19,6 @@ class Flag extends Model
 
     public function units(): HasMany
     {
-        return $this->hasMany(Unit::class)->chaperone();;
+        return $this->hasMany(Unit::class)->chaperone();
     }
 }

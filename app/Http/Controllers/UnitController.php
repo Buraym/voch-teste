@@ -88,7 +88,7 @@ class UnitController extends Controller
             "cnpj" => [
                 "required",
                 "regex:/^\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}$/",
-                "unique:unity,cnpj,".$id
+                "unique:units,cnpj,".$id
             ],
             "flag_id" => "required|exists:flags,id",
         ]);
