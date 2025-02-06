@@ -59,7 +59,7 @@ class EmployeesController extends Controller
             ->map(fn($employee) => [$employee->id, $employee->name, $employee->email, $employee->cpf, $employee->unit->name])
             ->toArray();
         
-        return redirect()->route("units", $query == "" ? [] : compact("query", "employeesFound"));
+        return redirect()->route("employees", $query == "" ? [] : compact("query", "employeesFound"));
     }
 
     /**
@@ -90,7 +90,7 @@ class EmployeesController extends Controller
             "cpf" => [
                 "required",
                 "regex:/^\d{11}$|^\d{3}\.\d{3}\.\d{3}\-\d{2}$/",
-                "unique:employees,cnpj,".$id
+                "unique:employees,cpf,".$id
             ],
             "unit_id" => "required|exists:units,id",
         ]);

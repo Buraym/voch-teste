@@ -56,6 +56,18 @@
             <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">
                 *Campo necessário
             </p>
+            @if (count($unit->employees) > 0)
+            <div class="py-2 flex flex-col jsutify-start items center gap-2 mb-4">
+                <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">
+                    Colaboradores desta unidade
+                </p>
+                @foreach ($unit->employees as $employee)
+                    <a href="{{ route('employee', $employee->id) }}" wire:navigate class="flex justify-center items-center h-10 rounded-lg hover:bg-gray-400 hover:text-gray-900 transition-all dark:bg-white hover">
+                        <i>{{ $employee->name }}</i>
+                    </a>
+                @endforeach
+            </div>
+            @endif
             <div class="flex gap-2">
                 <x-primary-button class="max-w-36 flex justify-center text-center">
                     Atualizar

@@ -44,7 +44,7 @@ $logout = function (Logout $logout) {
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('employees')" :active="request()->routeIs('employees') || request()->routeIs('add-unit') || request()->routeIs('unit')" wire:navigate>
+                    <x-nav-link :href="route('employees')" :active="request()->routeIs('employees') || request()->routeIs('add-employee') || request()->routeIs('employee')" wire:navigate>
                         Colaboradores
                     </x-nav-link>
                 </div>

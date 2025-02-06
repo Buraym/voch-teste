@@ -27,7 +27,7 @@ class StoreEmployeeRequest extends FormRequest
             "cpf" => [
                 "required",
                 "regex:/^\d{11}$|^\d{3}\.\d{3}\.\d{3}\-\d{2}$/",
-                "unique:employees,cnpj"
+                "unique:employees,cpf"
             ],
             "unit_id" => "required|exists:units,id",
         ];

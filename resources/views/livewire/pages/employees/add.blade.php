@@ -1,52 +1,52 @@
 @php
-    use \App\Models\Flag;
-    $flags = Flag::all()->map(fn($flag) => [$flag->id, $flag->name])->toArray();
+    use \App\Models\Unit;
+    $units = Unit::all()->map(fn($unit) => [$unit->id, $unit->name])->toArray();
 @endphp
 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
     <div class="p-2 sm:p-4 bg-white dark:bg-gray-800 shadow sm:rounded-lg flex justify-between items-center">
-        <form method="POST" action="{{ route("units.store") }}" class="flex flex-col gap-2">
+        <form method="POST" action="{{ route("employees.store") }}" class="flex flex-col gap-2">
             @csrf
-                <x-input-label for="name" value="Nome fantasia" class="sr-only" />
+                <x-input-label for="name" value="Nome completo" class="sr-only" />
                 <x-text-input
                     wire:model="name"
                     id="name"
                     name="name"
                     type="text"
                     class="block w-full"
-                    placeholder="Nome fantasia"
+                    placeholder="Nome completo"
                 />
                 <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">
                     *Campo necessário
                 </p>
-                <x-input-label for="social" value="Razão social" class="sr-only" />
+                <x-input-label for="email" value="Email" class="sr-only" />
                 <x-text-input
-                    wire:model="social"
-                    id="social"
-                    name="social"
-                    type="text"
+                    wire:model="email"
+                    id="email"
+                    name="email"
+                    type="email"
                     class="block w-full"
-                    placeholder="Razão social"
+                    placeholder="Email"
                 />
                 <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">
-                    *Campo necessário
+                    *Campo necessário e único
                 </p>
-                <x-input-label for="cnpj" value="CNPJ" class="sr-only" />
+                <x-input-label for="cpf" value="CPF" class="sr-only" />
                 <x-text-input
-                    wire:model="cnpj"
-                    id="cnpj"
-                    name="cnpj"
+                    wire:model="cpf"
+                    id="cpf"
+                    name="cpf"
                     type="text"
                     class="block w-full"
-                    placeholder="CNPJ ( xx.xxx.xxx/xxxx-xx )"
+                    placeholder="CPF ( xxx.xxx.xxx-xx )"
                 />
                 <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">
                     *Campo necessário, deve ser válido e único
                 </p>
                 <x-select
-                    text="Selecione a bandeira"
-                    :options="$flags"
-                    name="flag_id"
-                    id="flag_id"
+                    text="Selecione a unidade"
+                    :options="$units"
+                    name="unit_id"
+                    id="unit_id"
                 />
                 <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">
                     *Campo necessário
