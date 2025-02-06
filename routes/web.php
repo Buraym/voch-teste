@@ -14,6 +14,10 @@ Route::middleware(['web', 'auth', 'verified'])->group(function() {
     Route::view('flags', 'flags')->name('flags');
     Route::view('add-flag', 'add-flag')->name('add-flag');
     Route::view('flag/{id}', 'flag')->name('flag');
+
+    Route::view('units', 'units')->name('units');
+    Route::view('add-unit', 'add-unit')->name('add-unit');
+    Route::view('unit/{id}', 'unit')->name('unit');
 });
     
 Route::view('profile', 'profile')

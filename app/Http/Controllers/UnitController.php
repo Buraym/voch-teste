@@ -6,7 +6,7 @@ use App\Models\Unit;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\StoreUnitRequest;
 
-class UnityController extends Controller
+class UnitController extends Controller
 {
     private $unit;
     public  function __construct(Unit $unit)
