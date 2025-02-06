@@ -38,6 +38,11 @@ $logout = function (Logout $logout) {
                         Bandeiras
                     </x-nav-link>
                 </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('units')" :active="request()->routeIs('units') || request()->routeIs('add-unit') || request()->routeIs('unit')" wire:navigate>
+                        Unidades
+                    </x-nav-link>
+                </div>
             </div>
 
             <!-- Settings Dropdown -->

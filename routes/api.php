@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\EconomicGroupController;
 use App\Http\Controllers\FlagController;
+use App\Http\Controllers\UnitController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,4 +26,13 @@ Route::prefix("/flags")->group(function() {
     Route::get('/{id}', [FlagController::class, 'show']);
     Route::put('/{id}', [FlagController::class, 'update'])->name("flags.update");
     Route::delete('/{id}', [FlagController::class, 'destroy'])->name("flags.destroy");
+});
+
+Route::prefix("/units")->group(function() {
+    Route::get('/', [UnitController::class, 'index']);
+    Route::get('/search', [UnitController::class, 'search'])->name("units.search");
+    Route::post('/', [UnitController::class, 'store'])->name("units.store");
+    Route::get('/{id}', [UnitController::class, 'show']);
+    Route::put('/{id}', [UnitController::class, 'update'])->name("units.update");
+    Route::delete('/{id}', [UnitController::class, 'destroy'])->name("units.destroy");
 });
