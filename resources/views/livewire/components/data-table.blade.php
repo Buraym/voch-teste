@@ -21,7 +21,7 @@
                                 if ($index == 0 && $indexRow == count($rows) - 1) {
                                     echo " rounded-bl-lg ";
                                 }
-                            @endphp max-h-12 border-none px-4 text-gray-800 uppercase font-semibold text-xs">
+                            @endphp max-h-12 border-none px-4 text-gray-800 font-semibold text-xs">
                                 @if ($index == 0 || $index == 1)
                                     <a href="{{ route($link, ['id' => $row[0]]) }}" wire:navigate>
                                         {{ $cell }}
