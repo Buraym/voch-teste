@@ -21,7 +21,12 @@ class StoreSimpleReportRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [];
+        return [
+            "name" => "required",
+            "user_name" =>"required|string",
+            "employees" => 'required|array',
+            'employees.*' => 'exists:employees,id'
+        ];
     }
 
     public function messages()

@@ -24,6 +24,7 @@ Route::middleware(['web', 'auth', 'verified'])->group(function() {
     Route::view('employee/{id}', 'employee')->name('employee');
 
     Route::view('reports', 'reports')->name('reports');
+    Route::view('add-simple-report', 'add-simple-report')->name('add-simple-report');
 });
     
 Route::view('profile', 'profile')

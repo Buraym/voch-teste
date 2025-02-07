@@ -2,7 +2,8 @@
     use \App\Models\Report;
     $query = app('request')->input('query');
     $reportsFound = app('request')->input('reportsFound') ? app('request')->input('reportsFound')
-        : Report::all()->map(fn($report) => [$report->id, $report->name, date('d-m-Y', strtotime($report->created_at))])->toArray();
+        : Report::all()->map(fn($report) => [$report->id, $report->name, date('d/m/Y - H:i:s', strtotime($report->created_at))])
+        ->toArray();
 @endphp
 <x-app-layout>
     <x-slot name="header">
@@ -15,7 +16,7 @@
     <div class="py-12">
         @livewire('list-reports', [
             'reportsFound' => $reportsFound,
-            'query' => $query,
+            'query' => $query
         ])
     </div>
 </x-app-layout>
