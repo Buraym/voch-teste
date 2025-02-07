@@ -3,6 +3,7 @@
 use App\Http\Controllers\EconomicGroupController;
 use App\Http\Controllers\EmployeesController;
 use App\Http\Controllers\FlagController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UnitController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -45,4 +46,12 @@ Route::prefix("/employees")->group(function() {
     Route::get('/{id}', [EmployeesController::class, 'show']);
     Route::put('/{id}', [EmployeesController::class, 'update'])->name("employees.update");
     Route::delete('/{id}', [EmployeesController::class, 'destroy'])->name("employees.destroy");
+});
+
+Route::prefix("/reports")->group(function() {
+    Route::get('/', [ReportController::class, 'index']);
+    Route::get('/search', [ReportController::class, 'search'])->name("reports.search");
+    Route::post('/simple', [ReportController::class, 'simple'])->name("reports.simple");
+    Route::get('/{id}', [ReportController::class, 'show']);
+    Route::delete('/{id}', [ReportController::class, 'destroy'])->name("reports.destroy");
 });

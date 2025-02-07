@@ -48,6 +48,11 @@ $logout = function (Logout $logout) {
                         Colaboradores
                     </x-nav-link>
                 </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="route('reports')" :active="request()->routeIs('reports')" wire:navigate>
+                        Reportes
+                    </x-nav-link>
+                </div>
             </div>
 
             <!-- Settings Dropdown -->
@@ -117,6 +122,11 @@ $logout = function (Logout $logout) {
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('employees')" :active="request()->routeIs('employees') || request()->routeIs('add-unit') || request()->routeIs('unit')" wire:navigate>
                 Colaboradores
+            </x-responsive-nav-link>
+        </div>
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('reports')" :active="request()->routeIs('reports')" wire:navigate>
+                Reportes
             </x-responsive-nav-link>
         </div>
 

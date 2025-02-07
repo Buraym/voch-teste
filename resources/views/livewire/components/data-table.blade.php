@@ -22,7 +22,7 @@
                                     echo " rounded-bl-lg ";
                                 }
                             @endphp max-h-12 border-none px-4 text-gray-800 font-semibold text-xs">
-                                @if ($index == 0 || $index == 1)
+                                @if (($index == 0 || $index == 1) && $link != "")
                                     <a href="{{ route($link, ['id' => $row[0]]) }}" wire:navigate>
                                         {{ $cell }}
                                     </a>

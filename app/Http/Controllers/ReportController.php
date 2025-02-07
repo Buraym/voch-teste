@@ -49,7 +49,7 @@ class ReportController extends Controller
      *
      * @throws \Exception
     */
-    public function simpleReport(StoreSimpleReportRequest $request) {
+    public function simple(StoreSimpleReportRequest $request) {
         return redirect()->route("reports");
     }
 
