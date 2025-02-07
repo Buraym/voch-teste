@@ -52,6 +52,7 @@ Route::prefix("/reports")->group(function() {
     Route::get('/', [ReportController::class, 'index']);
     Route::get('/search', [ReportController::class, 'search'])->name("reports.search");
     Route::post('/simple', [ReportController::class, 'simple'])->name("reports.simple");
+    Route::post('/unit', [ReportController::class, 'unit'])->name("reports.unit");
     Route::post('/download/{id}', [ReportController::class, 'download'])->name("reports.download");
     Route::get('/{id}', [ReportController::class, 'show']);
     Route::delete('/{id}', [ReportController::class, 'destroy'])->name("reports.destroy");
