@@ -9,13 +9,15 @@ class DataTable extends Component
     public $columns = [];
     public $rows = [];
     public $link = "";
+    public $downloadRoute = "";
     public $deleteLink = "";
 
-    public function mount($columns = [], $rows = [], $link = "", $deleteLink = "")
+    public function mount($columns = [], $rows = [], $link = "", $downloadRoute = "", $deleteLink = "")
     {
         $this->columns = $columns;
         $this->rows = $rows;
         $this->link = $link;
+        $this->downloadRoute = $downloadRoute;
         $this->deleteLink = $deleteLink;
         
     }

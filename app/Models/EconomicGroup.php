@@ -13,6 +13,6 @@ class EconomicGroup extends Model
 
     public function flags(): HasMany
     {
-        return $this->hasMany(Flag::class)->chaperone();;
+        return $this->hasMany(Flag::class)->chaperone();
     }
 }
