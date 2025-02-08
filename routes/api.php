@@ -54,6 +54,7 @@ Route::prefix("/reports")->group(function() {
     Route::post('/simple', [ReportController::class, 'simple'])->name("reports.simple");
     Route::post('/unit', [ReportController::class, 'unit'])->name("reports.unit");
     Route::post('/flag', [ReportController::class, 'flag'])->name("reports.flag");
+    Route::post('/economic_group', [ReportController::class, 'economic_group'])->name("reports.economic_group");
     Route::post('/download/{id}', [ReportController::class, 'download'])->name("reports.download");
     Route::get('/{id}', [ReportController::class, 'show']);
     Route::delete('/{id}', [ReportController::class, 'destroy'])->name("reports.destroy");

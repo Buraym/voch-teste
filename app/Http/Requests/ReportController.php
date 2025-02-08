@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreEconomicGroupReportRequest;
 use App\Http\Requests\StoreFlagReportRequest;
 use App\Http\Requests\StoreSimpleReportRequest;
 use App\Http\Requests\StoreUnitReportRequest;
-use App\Models\EconomicGroup;
 use App\Models\Employee;
 use App\Models\Flag;
 use App\Models\Report;
@@ -401,37 +399,46 @@ class ReportController extends Controller
     }
 
     /**
-     * Store a newly created economic group report in storage
+     * Store a newly created flag report in storage
      *
-     * @param  \App\Http\Requests\StoreEconomicGroupReportRequest $request
+     * @param  \App\Http\Requests\StoreFlagReportRequest $request
      * @return \Illuminate\Http\RedirectResponse
      *
      * @throws \Exception
     */
-    public function economic_group(StoreEconomicGroupReportRequest $request) {
+    public function flag(StoreFlagReportRequest $request) {
 
         $validatedRequest = $request->validated();
-
-        $selectedFlagsIds = $validatedRequest["flags"];
 
         $selectedUnitsIds = $validatedRequest["units"];
         
         $selectedEmployeeIds = $validatedRequest["employees"];
 
-        $selectedEconomicGroups = EconomicGroup::whereIn("id", $validatedRequest["economic_groups"])
-            ->with(['flags' => function ($query) use ($selectedFlagsIds) {
-                    $query->whereIn('id', $selectedFlagsIds);
-            },  'flags.units' => function ($query) use ($selectedUnitsIds) {
+        $selectedFlags = Flag::whereIn("id", $validatedRequest["flags"])
+            ->with(['units' => function ($query) use ($selectedUnitsIds) {
                 $query->whereIn('id', $selectedUnitsIds);
-            }, 'flags.units.employees' => function ($query) use ($selectedEmployeeIds) {
+            }, 'units.employees' => function ($query) use ($selectedEmployeeIds) {
                 $query->whereIn('id', $selectedEmployeeIds);
             }])
             ->get();
-        
+
         $allImportStyles = [
             'fill' => [
                 'fillType' => Fill::FILL_SOLID,
                 'startColor' => ['argb' => 'FFFFFF00'],
+            ],
+            'borders' => [
+                'outline' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                    'color' => ['argb' => '00000000'],
+                ],
+            ],
+        ];
+
+        $commonOddImportStyles = [
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => ['argb' => 'FFD9D9D9'],
             ],
             'borders' => [
                 'outline' => [
@@ -454,51 +461,25 @@ class ReportController extends Controller
             ],
         ];
 
-        $commonCellOddImportStyles = [
-            'fill' => [
-                'fillType' => Fill::FILL_SOLID,
-                'startColor' => ['argb' => 'FFD9D9D9'],
-            ],
-            'borders' => [
-                'outline' => [
-                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DASHDOTDOT,
-                    'color' => ['argb' => '00000000'],
-                ],
-            ],
-        ];
-
-        $commonCellEvenImportStyles = [
-            'fill' => [
-                'fillType' => Fill::FILL_SOLID,
-                'startColor' => ['argb' => 'FFFFFFFF'], // Amarelo
-            ],
-            'borders' => [
-                'outline' => [
-                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_DASHDOTDOT,
-                    'color' => ['argb' => '00000000'],
-                ],
-            ],
-        ];
-
         $spreadsheet = new Spreadsheet();
 
-        foreach ($selectedEconomicGroups as $key => $group) {
+        foreach ($selectedFlags as $key => $flag) {
             if ($key == 0) {
                 $sheet = $spreadsheet->getActiveSheet();
             } else {
                 $sheet = $spreadsheet->createSheet();
             }
 
-            $sheet->setTitle(mb_strlen($group->name) <= 35 ? mb_strtoupper($group->name) : substr($group->name, 0, 35));
+            $sheet->setTitle(mb_strlen($flag->name) <= 35 ? mb_strtoupper($flag->name) : substr($flag->name, 0, 35));
 
-            $groupReportTitle = new RichText();
-            $boldText = $groupReportTitle->createTextRun("REPORTE DE COLABORADORES DO GRUPO ECONÔMICO ");
+            $flagReportTitle = new RichText();
+            $boldText = $flagReportTitle->createTextRun("REPORTE DE COLABORADORES DA BANDEIRA ");
             $boldText->getFont()->setBold(true);
-            $boldAnditalicText = $groupReportTitle->createTextRun(mb_strtoupper($group->name));
+            $boldAnditalicText = $flagReportTitle->createTextRun(mb_strtoupper($flag->name));
             $boldAnditalicText->getFont()->setBold(true);
             $boldAnditalicText->getFont()->setItalic(true);
 
-            $sheet->setCellValue('A1', $groupReportTitle);
+            $sheet->setCellValue('A1', $flagReportTitle);
             $sheet->mergeCells('A1:E1');
             $sheet->getStyle('A1')->applyFromArray($allImportStyles);
             $sheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
@@ -521,122 +502,86 @@ class ReportController extends Controller
             $sheet->setCellValue('C2', $createdByReportText);
             $sheet->getStyle('C2:E2')->applyFromArray($allImportStyles);
 
-            $sheet->mergeCells('A3:E3');
-            $sheet->getStyle('A3:E3')->applyFromArray($commonEvenImportStyles);
+            $flagNameReportText = new RichText();
+            $boldText = $flagNameReportText->createTextRun("NOME DA BANDEIRA: ");
+            $flagNameReportText->createText($flag->name);
+            $boldText->getFont()->setBold(true);
+            $sheet->mergeCells('A3:B3');
+            $sheet->setCellValue('A3', $flagNameReportText);
+            $sheet->getStyle('A3:B3')->applyFromArray($allImportStyles);
 
-            $sheet->setCellValue('A4', '# ID');
-            $sheet->getStyle('A4')->applyFromArray($allImportStyles);
-            $sheet->getStyle('A4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
-            $sheet->getStyle('A4')->getFont()->setBold(true);
+            $flagGroupNameReportText = new RichText();
+            $boldText = $flagGroupNameReportText->createTextRun("GRUPO ECONÔMICO: ");
+            $flagGroupNameReportText->createText($flag->economicGroup->name);
+            $boldText->getFont()->setBold(true);
+            $sheet->mergeCells('C3:E3');
+            $sheet->setCellValue('C3', $flagGroupNameReportText);
+            $sheet->getStyle('C3:E3')->applyFromArray($allImportStyles);
 
-            $sheet->setCellValue('B4', 'NOME');
-            $sheet->getStyle('B4')->applyFromArray($allImportStyles);
-            $sheet->getStyle('B4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-            $sheet->getStyle('B4')->getFont()->setBold(true);
+            $sheet->mergeCells('A4:E4');
+            $sheet->getStyle('A4:E4')->applyFromArray($commonEvenImportStyles);
 
-            $sheet->setCellValue('C4', 'EMAIL');
-            $sheet->getStyle('C4')->applyFromArray($allImportStyles);
-            $sheet->getStyle('C4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-            $sheet->getStyle('C4')->getFont()->setBold(true);
+            $sheet->setCellValue('A5', '# ID');
+            $sheet->getStyle('A5')->applyFromArray($allImportStyles);
+            $sheet->getStyle('A5')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
+            $sheet->getStyle('A5')->getFont()->setBold(true);
 
-            $sheet->setCellValue('D4', 'CPF');
-            $sheet->getStyle('D4')->applyFromArray($allImportStyles);
-            $sheet->getStyle('D4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-            $sheet->getStyle('D4')->getFont()->setBold(true);
+            $sheet->setCellValue('B5', 'NOME');
+            $sheet->getStyle('B5')->applyFromArray($allImportStyles);
+            $sheet->getStyle('B5')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('B5')->getFont()->setBold(true);
 
-            $sheet->setCellValue('E4', 'UNIDADE');
-            $sheet->getStyle('E4')->applyFromArray($allImportStyles);
-            $sheet->getStyle('E4')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-            $sheet->getStyle('E4')->getFont()->setBold(true);
+            $sheet->setCellValue('C5', 'EMAIL');
+            $sheet->getStyle('C5')->applyFromArray($allImportStyles);
+            $sheet->getStyle('C5')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('C5')->getFont()->setBold(true);
 
-            $sheet->freezePane('A5');
+            $sheet->setCellValue('D5', 'CPF');
+            $sheet->getStyle('D5')->applyFromArray($allImportStyles);
+            $sheet->getStyle('D5')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('D5')->getFont()->setBold(true);
 
-            $startingPoint = 5;
+            $sheet->setCellValue('E5', 'UNIDADE');
+            $sheet->getStyle('E5')->applyFromArray($allImportStyles);
+            $sheet->getStyle('E5')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('E5')->getFont()->setBold(true);
 
-            foreach ($group->flags as $flag) {
+            $sheet->freezePane('A6');
 
-                $groupFlagReportTitle = new RichText();
-                $boldText = $groupFlagReportTitle->createTextRun("BANDEIRA ");
-                $boldText->getFont()->setBold(true);
-                $boldAnditalicText = $groupFlagReportTitle->createTextRun(mb_strtoupper($flag->name));
-                $boldAnditalicText->getFont()->setBold(true);
-                $boldAnditalicText->getFont()->setItalic(true);
+            $startingPoint = 6;
 
-                $sheet->mergeCells('A'.str($startingPoint).':E'.str($startingPoint));
-                $sheet->setCellValue('A'.str($startingPoint), $groupFlagReportTitle);
-                $sheet->getStyle('A'.str($startingPoint))->applyFromArray($allImportStyles);
-                $sheet->getStyle('A'.str($startingPoint))->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-                $sheet->getStyle('A'.str($startingPoint))->getFont()->setBold(true);
+            foreach ($flag->units as $unit) {
 
-                $startingPoint += 1;
-
-                foreach ($flag->units as $unit) {
-
-                    $sheet->mergeCells('A'.str($startingPoint).':A'.str($startingPoint + 1));
-                    $sheet->getStyle('A'.str($startingPoint))->applyFromArray($allImportStyles);
-
-                    $sheet->mergeCells('B'.str($startingPoint).':E'.str($startingPoint)); 
-                    $sheet->getStyle('B'.str($startingPoint).':E'.str($startingPoint))
-                        ->getAlignment()
-                        ->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-                    $sheet->getStyle('B'.str($startingPoint))->applyFromArray($commonEvenImportStyles);
-                    $sheet->getStyle('B'.str($startingPoint))->getFont()->setBold(true);
-                    $sheet->getStyle('B'.str($startingPoint))->getFont()->setItalic(true);
-                    $sheet->setCellValue('B'.str($startingPoint), mb_strtoupper($unit->name));
-
-                    $flagUnitNameReportTitle = new RichText();
-                    $boldText = $flagUnitNameReportTitle->createTextRun("NOME FANTASIA: ");
-                    $boldText->getFont()->setBold(true);
-                    $boldAnditalicText = $flagUnitNameReportTitle->createText(mb_strtoupper($unit->name));
-                    $sheet->getStyle('B'.str($startingPoint + 1))->applyFromArray($commonEvenImportStyles);
-                    $sheet->setCellValue('B'.str($startingPoint + 1), $flagUnitNameReportTitle);
-
-                    $flagUnitSocialReportTitle = new RichText();
-                    $boldText = $flagUnitSocialReportTitle->createTextRun("RAZÃO SOCIAL: ");
-                    $boldText->getFont()->setBold(true);
-                    $boldAnditalicText = $flagUnitSocialReportTitle->createText(mb_strtoupper($unit->social));
-                    $sheet->getStyle('C'.str($startingPoint + 1))->applyFromArray($commonEvenImportStyles);
-                    $sheet->setCellValue('C'.str($startingPoint + 1), $flagUnitSocialReportTitle);
-                    $sheet->mergeCells('C'.str($startingPoint + 1).':D'.str($startingPoint + 1));
-
-                    $flagUnitCNPJReportTitle = new RichText();
-                    $boldText = $flagUnitCNPJReportTitle->createTextRun("CNPJ: ");
-                    $boldText->getFont()->setBold(true);
-                    $boldAnditalicText = $flagUnitCNPJReportTitle->createText(mb_strtoupper($unit->cnpj));
-                    $sheet->getStyle('E'.str($startingPoint + 1))->applyFromArray($commonEvenImportStyles);
-                    $sheet->setCellValue('E'.str($startingPoint + 1), $flagUnitCNPJReportTitle);
-
-                    $startingPoint += 2;
-
-                    foreach ($unit->employees as $index => $employee) {
-                        
-                        $sheet->setCellValue('A'.str($startingPoint + $index), $employee["id"]);
-                        $sheet->getStyle('A'.str($startingPoint + $index))->applyFromArray($index % 2 == 0 ? $commonCellEvenImportStyles : $commonCellOddImportStyles);
-                        $sheet->getStyle('A'.str($startingPoint + $index))->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
-                        $sheet->getStyle('A'.str($startingPoint + $index))->getFont()->setBold(true);
-
-                        $sheet->setCellValue('B'.str($startingPoint + $index), $employee["name"]);
-                        $sheet->getStyle('B'.str($startingPoint + $index))->applyFromArray($index % 2 == 0 ? $commonCellEvenImportStyles : $commonCellOddImportStyles);
-                        $sheet->getStyle('B'.str($startingPoint + $index))->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-
-                        $sheet->setCellValue('C'.str($startingPoint + $index), $employee["email"]);
-                        $sheet->getStyle('C'.str($startingPoint + $index))->applyFromArray($index % 2 == 0 ? $commonCellEvenImportStyles : $commonCellOddImportStyles);
-                        $sheet->getStyle('C'.str($startingPoint + $index))->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-
-                        $sheet->setCellValue('D'.str($startingPoint + $index), $employee["cpf"]);
-                        $sheet->getStyle('D'.str($startingPoint + $index))->applyFromArray($index % 2 == 0 ? $commonCellEvenImportStyles : $commonCellOddImportStyles);
-                        $sheet->getStyle('D'.str($startingPoint + $index))->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-
-                        $sheet->setCellValue('E'.str($startingPoint + $index), $employee["unit"]["name"]);
-                        $sheet->getStyle('E'.str($startingPoint + $index))->applyFromArray($index % 2 == 0 ? $commonCellEvenImportStyles : $commonCellOddImportStyles);
-                        $sheet->getStyle('E'.str($startingPoint + $index))->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                foreach ($unit->employees as $index => $employee) {
                     
-                    }
+                    $sheet->setCellValue('A'.str($startingPoint + $index), $employee["id"]);
+                    $sheet->getStyle('A'.str($startingPoint + $index))->applyFromArray($index % 2 == 0 ? $commonEvenImportStyles : $commonOddImportStyles);
+                    $sheet->getStyle('A'.str($startingPoint + $index))->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
+                    $sheet->getStyle('A'.str($startingPoint + $index))->getFont()->setBold(true);
 
-                    $startingPoint += count($unit->employees);
-                    
+                    $sheet->setCellValue('B'.str($startingPoint + $index), $employee["name"]);
+                    $sheet->getStyle('B'.str($startingPoint + $index))->applyFromArray($index % 2 == 0 ? $commonEvenImportStyles : $commonOddImportStyles);
+                    $sheet->getStyle('B'.str($startingPoint + $index))->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+                    $sheet->setCellValue('C'.str($startingPoint + $index), $employee["email"]);
+                    $sheet->getStyle('C'.str($startingPoint + $index))->applyFromArray($index % 2 == 0 ? $commonEvenImportStyles : $commonOddImportStyles);
+                    $sheet->getStyle('C'.str($startingPoint + $index))->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+                    $sheet->setCellValue('D'.str($startingPoint + $index), $employee["cpf"]);
+                    $sheet->getStyle('D'.str($startingPoint + $index))->applyFromArray($index % 2 == 0 ? $commonEvenImportStyles : $commonOddImportStyles);
+                    $sheet->getStyle('D'.str($startingPoint + $index))->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+                    $sheet->setCellValue('E'.str($startingPoint + $index), $employee["unit"]["name"]);
+                    $sheet->getStyle('E'.str($startingPoint + $index))->applyFromArray($index % 2 == 0 ? $commonEvenImportStyles : $commonOddImportStyles);
+                    $sheet->getStyle('E'.str($startingPoint + $index))->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                
                 }
 
+                $sheet->mergeCells('A' . str($startingPoint + count($unit->employees)) . ':E' . str($startingPoint + count($unit->employees)));
+                $sheet->getStyle('A' . str($startingPoint + count($unit->employees)) . ':E' . str($startingPoint + count($unit->employees)))->applyFromArray($allImportStyles);
+
+                $startingPoint += count($unit->employees) + 1;
+                
             }
   
         }

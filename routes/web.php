@@ -27,6 +27,7 @@ Route::middleware(['web', 'auth', 'verified'])->group(function() {
     Route::view('add-simple-report', 'add-simple-report')->name('add-simple-report');
     Route::view('add-unit-report', 'add-unit-report')->name('add-unit-report');
     Route::view('add-flag-report', 'add-flag-report')->name('add-flag-report');
+    Route::view('add-economic-group-report', 'add-economic-group-report')->name('add-economic-group-report');
 });
     
 Route::view('profile', 'profile')

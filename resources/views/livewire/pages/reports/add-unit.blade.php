@@ -1,9 +1,7 @@
 @php
     use Illuminate\Support\Facades\Auth;
     use \App\Models\Unit;
-    use \App\Models\Employee;
     $user = Auth::user();
-    // dd($user);
     $units = Unit::all();
 @endphp
 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">

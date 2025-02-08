@@ -2,11 +2,9 @@
     use Illuminate\Support\Facades\Auth;
     use \App\Models\Flag;
     use \App\Models\Unit;
-    use \App\Models\Employee;
     $user = Auth::user();
     $flags = Flag::all();
     $units = Unit::all();
-    $employees = Employee::all();
 @endphp
 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
     <div class="min-w-full p-2 sm:p-4 bg-white dark:bg-gray-800 shadow sm:rounded-lg flex justify-between items-center">
@@ -88,14 +86,6 @@
                                 @endforeach
                             </div>
                         @endif
-                    @endforeach
-
-
-
-                    @foreach ($units as $index => $unit)
-                        @if (count($unit->employees) > 0)
-                            
-                        @endif  
                     @endforeach
                 </div>
                 <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">
