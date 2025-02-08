@@ -33,7 +33,7 @@
                 <x-dropdown-link :href="route('add-unit-report')" wire:navigate>
                     Reporte por unidades
                 </x-dropdown-link>
-                <x-dropdown-link :href="route('add-unit-report')" wire:navigate>
+                <x-dropdown-link :href="route('add-flag-report')" wire:navigate>
                     Reporte por bandeiras
                 </x-dropdown-link>
                 <x-dropdown-link :href="route('add-unit-report')" wire:navigate>

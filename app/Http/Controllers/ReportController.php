@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreFlagReportRequest;
 use App\Http\Requests\StoreSimpleReportRequest;
 use App\Http\Requests\StoreUnitReportRequest;
 use App\Models\Employee;
+use App\Models\Flag;
 use App\Models\Report;
 use App\Models\Unit;
 use Illuminate\Foundation\Http\FormRequest;
@@ -223,8 +225,6 @@ class ReportController extends Controller
             }])
             ->get();
 
-        // dd($selectedUnits);
-
         $allImportStyles = [
             'fill' => [
                 'fillType' => Fill::FILL_SOLID,
@@ -396,6 +396,211 @@ class ReportController extends Controller
         ]);
 
         return redirect()->route("reports");
+    }
+
+    /**
+     * Store a newly created unit report in storage
+     *
+     * @param  \App\Http\Requests\StoreFlagReportRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     *
+     * @throws \Exception
+    */
+    public function flag(StoreFlagReportRequest $request) {
+
+        $validatedRequest = $request->validated();
+
+        $selectedUnitsIds = $validatedRequest["units"];
+        
+        $selectedEmployeeIds = $validatedRequest["employees"];
+
+        $selectedFlags = Flag::whereIn("id", $validatedRequest["flags"])
+            ->with(['units' => function ($query) use ($selectedUnitsIds) {
+                $query->whereIn('id', $selectedUnitsIds);
+            }, 'units.employees' => function ($query) use ($selectedEmployeeIds) {
+                $query->whereIn('id', $selectedEmployeeIds);
+            }])
+            ->get();
+
+        $allImportStyles = [
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => ['argb' => 'FFFFFF00'],
+            ],
+            'borders' => [
+                'outline' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                    'color' => ['argb' => '00000000'],
+                ],
+            ],
+        ];
+
+        $commonOddImportStyles = [
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => ['argb' => 'FFD9D9D9'],
+            ],
+            'borders' => [
+                'outline' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                    'color' => ['argb' => '00000000'],
+                ],
+            ],
+        ];
+
+        $commonEvenImportStyles = [
+            'fill' => [
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => ['argb' => 'FFFFFFFF'], // Amarelo
+            ],
+            'borders' => [
+                'outline' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                    'color' => ['argb' => '00000000'],
+                ],
+            ],
+        ];
+
+        $spreadsheet = new Spreadsheet();
+
+        foreach ($selectedFlags as $key => $flag) {
+            if ($key == 0) {
+                $sheet = $spreadsheet->getActiveSheet();
+            } else {
+                $sheet = $spreadsheet->createSheet();
+            }
+
+            $sheet->setTitle(mb_strlen($flag->name) <= 35 ? mb_strtoupper($flag->name) : substr($flag->name, 0, 35));
+
+            $flagReportTitle = new RichText();
+            $boldText = $flagReportTitle->createTextRun("REPORTE DE COLABORADORES DA BANDEIRA ");
+            $boldText->getFont()->setBold(true);
+            $boldAnditalicText = $flagReportTitle->createTextRun(mb_strtoupper($flag->name));
+            $boldAnditalicText->getFont()->setBold(true);
+            $boldAnditalicText->getFont()->setItalic(true);
+
+            $sheet->setCellValue('A1', $flagReportTitle);
+            $sheet->mergeCells('A1:E1');
+            $sheet->getStyle('A1')->applyFromArray($allImportStyles);
+            $sheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('A1')->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
+            $sheet->getStyle('A1')->getFont()->setBold(true);
+
+            $createdAtReportText = new RichText();
+            $boldText = $createdAtReportText->createTextRun("CRIADO: ");
+            $createdAtReportText->createText(date('d/m/Y - H:i:s'));
+            $boldText->getFont()->setBold(true);
+            $sheet->mergeCells('A2:B2');
+            $sheet->setCellValue('A2', $createdAtReportText);
+            $sheet->getStyle('A2:B2')->applyFromArray($allImportStyles);
+
+            $createdByReportText = new RichText();
+            $boldText = $createdByReportText->createTextRun("USUARIO: ");
+            $createdByReportText->createText($request->all()["user_name"]);
+            $boldText->getFont()->setBold(true);
+            $sheet->mergeCells('C2:E2');
+            $sheet->setCellValue('C2', $createdByReportText);
+            $sheet->getStyle('C2:E2')->applyFromArray($allImportStyles);
+
+            $flagNameReportText = new RichText();
+            $boldText = $flagNameReportText->createTextRun("NOME DA BANDEIRA: ");
+            $flagNameReportText->createText($flag->name);
+            $boldText->getFont()->setBold(true);
+            $sheet->mergeCells('A3:B3');
+            $sheet->setCellValue('A3', $flagNameReportText);
+            $sheet->getStyle('A3:B3')->applyFromArray($allImportStyles);
+
+            $flagGroupNameReportText = new RichText();
+            $boldText = $flagGroupNameReportText->createTextRun("GRUPO ECONÔMICO: ");
+            $flagGroupNameReportText->createText($flag->economicGroup->name);
+            $boldText->getFont()->setBold(true);
+            $sheet->mergeCells('C3:E3');
+            $sheet->setCellValue('C3', $flagGroupNameReportText);
+            $sheet->getStyle('C3:E3')->applyFromArray($allImportStyles);
+
+            $sheet->mergeCells('A4:E4');
+            $sheet->getStyle('A4:E4')->applyFromArray($commonEvenImportStyles);
+
+            $sheet->setCellValue('A5', '# ID');
+            $sheet->getStyle('A5')->applyFromArray($allImportStyles);
+            $sheet->getStyle('A5')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
+            $sheet->getStyle('A5')->getFont()->setBold(true);
+
+            $sheet->setCellValue('B5', 'NOME');
+            $sheet->getStyle('B5')->applyFromArray($allImportStyles);
+            $sheet->getStyle('B5')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('B5')->getFont()->setBold(true);
+
+            $sheet->setCellValue('C5', 'EMAIL');
+            $sheet->getStyle('C5')->applyFromArray($allImportStyles);
+            $sheet->getStyle('C5')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('C5')->getFont()->setBold(true);
+
+            $sheet->setCellValue('D5', 'CPF');
+            $sheet->getStyle('D5')->applyFromArray($allImportStyles);
+            $sheet->getStyle('D5')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('D5')->getFont()->setBold(true);
+
+            $sheet->setCellValue('E5', 'UNIDADE');
+            $sheet->getStyle('E5')->applyFromArray($allImportStyles);
+            $sheet->getStyle('E5')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+            $sheet->getStyle('E5')->getFont()->setBold(true);
+
+            $sheet->freezePane('A6');
+
+            $startingPoint = 6;
+
+            foreach ($flag->units as $unit) {
+
+                foreach ($unit->employees as $index => $employee) {
+                    
+                    $sheet->setCellValue('A'.str($startingPoint + $index), $employee["id"]);
+                    $sheet->getStyle('A'.str($startingPoint + $index))->applyFromArray($index % 2 == 0 ? $commonEvenImportStyles : $commonOddImportStyles);
+                    $sheet->getStyle('A'.str($startingPoint + $index))->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
+                    $sheet->getStyle('A'.str($startingPoint + $index))->getFont()->setBold(true);
+
+                    $sheet->setCellValue('B'.str($startingPoint + $index), $employee["name"]);
+                    $sheet->getStyle('B'.str($startingPoint + $index))->applyFromArray($index % 2 == 0 ? $commonEvenImportStyles : $commonOddImportStyles);
+                    $sheet->getStyle('B'.str($startingPoint + $index))->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+                    $sheet->setCellValue('C'.str($startingPoint + $index), $employee["email"]);
+                    $sheet->getStyle('C'.str($startingPoint + $index))->applyFromArray($index % 2 == 0 ? $commonEvenImportStyles : $commonOddImportStyles);
+                    $sheet->getStyle('C'.str($startingPoint + $index))->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+                    $sheet->setCellValue('D'.str($startingPoint + $index), $employee["cpf"]);
+                    $sheet->getStyle('D'.str($startingPoint + $index))->applyFromArray($index % 2 == 0 ? $commonEvenImportStyles : $commonOddImportStyles);
+                    $sheet->getStyle('D'.str($startingPoint + $index))->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+                    $sheet->setCellValue('E'.str($startingPoint + $index), $employee["unit"]["name"]);
+                    $sheet->getStyle('E'.str($startingPoint + $index))->applyFromArray($index % 2 == 0 ? $commonEvenImportStyles : $commonOddImportStyles);
+                    $sheet->getStyle('E'.str($startingPoint + $index))->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+                
+                }
+
+                $sheet->mergeCells('A' . str($startingPoint + count($unit->employees)) . ':E' . str($startingPoint + count($unit->employees)));
+                $sheet->getStyle('A' . str($startingPoint + count($unit->employees)) . ':E' . str($startingPoint + count($unit->employees)))->applyFromArray($allImportStyles);
+
+                $startingPoint += count($unit->employees) + 1;
+                
+            }
+  
+        }
+
+        $temp_file = tempnam(sys_get_temp_dir(), 'xlsx');
+        $writer = new Xlsx($spreadsheet);
+        $writer->save($temp_file);
+        $uuid = Str::uuid();
+        $path = $validatedRequest["name"].'-'.$uuid.'.xlsx';
+        Storage::put($path, file_get_contents($temp_file));
+        unlink($temp_file);
+
+        $this->report->create([
+            "name" => $validatedRequest["name"],
+            "url" => $path
+        ]);
+
+        return redirect()->route("reports");
+
     }
 
     /**

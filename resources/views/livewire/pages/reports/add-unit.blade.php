@@ -5,7 +5,6 @@
     $user = Auth::user();
     // dd($user);
     $units = Unit::all();
-    $employees = Employee::all();
 @endphp
 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
     <div class="min-w-full p-2 sm:p-4 bg-white dark:bg-gray-800 shadow sm:rounded-lg flex justify-between items-center">
