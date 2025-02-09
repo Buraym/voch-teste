@@ -71,9 +71,14 @@ $logout = function (Logout $logout) {
                     </x-slot>
 
                     <x-slot name="content">
+                        <x-dropdown-link :href="route('audits')" wire:navigate>
+                            Auditoria
+                        </x-dropdown-link>
+
                         <x-dropdown-link :href="route('profile')" wire:navigate>
                             {{ __('Profile') }}
                         </x-dropdown-link>
+                        
 
                         <!-- Authentication -->
                         <button wire:click="logout" class="w-full text-start">
@@ -138,6 +143,10 @@ $logout = function (Logout $logout) {
             </div>
 
             <div class="mt-3 space-y-1">
+                <x-responsive-nav-link :href="route('audits')" wire:navigate>
+                    Auditoria
+                </x-responsive-nav-link>
+
                 <x-responsive-nav-link :href="route('profile')" wire:navigate>
                     {{ __('Profile') }}
                 </x-responsive-nav-link>

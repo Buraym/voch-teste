@@ -2,7 +2,6 @@
     use \App\Models\Employee;
     use Illuminate\Support\Facades\Auth;
     $user = Auth::user();
-    // dd($user);
     $employees = Employee::all();
 @endphp
 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
