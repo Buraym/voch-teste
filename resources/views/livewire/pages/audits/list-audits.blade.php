@@ -21,6 +21,7 @@
     <div class="p-2 sm:p-4 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
         @livewire('data-table', [
             'columns' => ['ID', 'Nome do usuário', 'Ação', 'Feito em'],
+            'link' => 'audit',
             'rows' => $auditsFound,
         ])
     </div>

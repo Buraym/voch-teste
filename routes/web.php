@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
    
-Route::middleware(['auth', 'auth.session', 'web'])->group(function() {
+Route::middleware(['auth', 'verified'])->group(function() {
     
     Route::view('dashboard', 'dashboard')->name('dashboard');
 
@@ -31,6 +31,7 @@ Route::middleware(['auth', 'auth.session', 'web'])->group(function() {
     Route::view('add-economic-group-report', 'add-economic-group-report')->name('add-economic-group-report');
 
     Route::view('audits', 'audits')->name('audits');
+    Route::view('audit/{id}', 'audit')->name('audit');
 });
     
 Route::view('profile', 'profile')

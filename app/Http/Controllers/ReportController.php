@@ -103,7 +103,7 @@ class ReportController extends Controller
         $commonEvenImportStyles = [
             'fill' => [
                 'fillType' => Fill::FILL_SOLID,
-                'startColor' => ['argb' => 'FFFFFFFF'], // Amarelo
+                'startColor' => ['argb' => 'FFFFFFFF'],
             ],
             'borders' => [
                 'outline' => [
@@ -256,7 +256,7 @@ class ReportController extends Controller
         $commonEvenImportStyles = [
             'fill' => [
                 'fillType' => Fill::FILL_SOLID,
-                'startColor' => ['argb' => 'FFFFFFFF'], // Amarelo
+                'startColor' => ['argb' => 'FFFFFFFF'], 
             ],
             'borders' => [
                 'outline' => [
@@ -444,7 +444,7 @@ class ReportController extends Controller
         $commonEvenImportStyles = [
             'fill' => [
                 'fillType' => Fill::FILL_SOLID,
-                'startColor' => ['argb' => 'FFFFFFFF'], // Amarelo
+                'startColor' => ['argb' => 'FFFFFFFF'], 
             ],
             'borders' => [
                 'outline' => [
@@ -470,7 +470,7 @@ class ReportController extends Controller
         $commonCellEvenImportStyles = [
             'fill' => [
                 'fillType' => Fill::FILL_SOLID,
-                'startColor' => ['argb' => 'FFFFFFFF'], // Amarelo
+                'startColor' => ['argb' => 'FFFFFFFF'], 
             ],
             'borders' => [
                 'outline' => [
@@ -667,7 +667,7 @@ class ReportController extends Controller
      * @throws \Exception
     */
     public function download($id) {
-        $report = $this->report->find($id);
+        $report = $this->report->withTrashed()->find($id);
         if ($report == null) {
             return redirect()->route("reports", ['error' => "Reporte não encontrado !"]);
         }
@@ -707,7 +707,6 @@ class ReportController extends Controller
         if ($report == null) {
             return redirect()->route("reports", ['error' => "Reporte não encontrado !"]);
         }
-        Storage::delete($report->url);
         $report->delete();
         return redirect()->route("reports", ["message" => "Reporte removido com sucesso !"]);
     }

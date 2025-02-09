@@ -101,7 +101,7 @@ class ReportController extends Controller
         $commonEvenImportStyles = [
             'fill' => [
                 'fillType' => Fill::FILL_SOLID,
-                'startColor' => ['argb' => 'FFFFFFFF'], // Amarelo
+                'startColor' => ['argb' => 'FFFFFFFF'], 
             ],
             'borders' => [
                 'outline' => [
@@ -254,7 +254,7 @@ class ReportController extends Controller
         $commonEvenImportStyles = [
             'fill' => [
                 'fillType' => Fill::FILL_SOLID,
-                'startColor' => ['argb' => 'FFFFFFFF'], // Amarelo
+                'startColor' => ['argb' => 'FFFFFFFF'], 
             ],
             'borders' => [
                 'outline' => [
@@ -451,7 +451,7 @@ class ReportController extends Controller
         $commonEvenImportStyles = [
             'fill' => [
                 'fillType' => Fill::FILL_SOLID,
-                'startColor' => ['argb' => 'FFFFFFFF'], // Amarelo
+                'startColor' => ['argb' => 'FFFFFFFF'], 
             ],
             'borders' => [
                 'outline' => [

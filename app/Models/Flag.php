@@ -8,11 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[ObservedBy([FlagObserver::class])]
 class Flag extends Model
 {
     use HasFactory;
+    use SoftDeletes;
     protected $fillable = ["name", "economic_group_id"];
 
     public function economicGroup(): BelongsTo
