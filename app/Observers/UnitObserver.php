@@ -39,7 +39,7 @@ class UnitObserver
             'model_type' => get_class($unit),
             'model_id' => $unit->id,
             'action' => 'updated',
-            'description' => "Alterou o nome da unidade '".$old_values["name"]."'",
+            'description' => "Alterou a unidade '".$old_values["name"]."'",
             'old_values' => $old_values,
             'new_values' => $unit->getAttributes(),
             'ip_address' => request()->ip(),
