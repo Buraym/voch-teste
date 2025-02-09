@@ -18,6 +18,7 @@ class EconomicGroupObserver
             'model_type' => get_class($model),
             'model_id' => $model->id,
             'action' => 'created',
+            'description' => "Criou o grupo econômico '".$model->name."'",
             'old_values' => null,
             'new_values' => $model->getAttributes(),
             'ip_address' => request()->ip(),
@@ -29,7 +30,6 @@ class EconomicGroupObserver
      */
     public function updated(EconomicGroup $model): void
     {
-        // dd($model->getChanges(), $model->getOriginal(), $model->getAttributes());
         $old_values = $model->getAttributes();
         foreach ($model->getChanges() as $key => $_value) {
             $old_values[$key] = $model->getOriginal()[$key];
@@ -39,6 +39,7 @@ class EconomicGroupObserver
             'model_type' => get_class($model),
             'model_id' => $model->id,
             'action' => 'updated',
+            'description' => "Alterou o nome do grupo econômico '".$old_values["name"]."'",
             'old_values' => $old_values,
             'new_values' => $model->getAttributes(),
             'ip_address' => request()->ip(),
@@ -55,6 +56,7 @@ class EconomicGroupObserver
             'model_type' => get_class($model),
             'model_id' => $model->id,
             'action' => 'deleted',
+            'description' => "Deletou o grupo econômico '".$model->name."'",
             'old_values' => $model->getAttributes(),
             'new_values' => null,
             'ip_address' => request()->ip(),
