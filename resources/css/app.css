@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.data-table-view::-webkit-scrollbar {
+    display: none !important;
+}
+
+::-webkit-scrollbar {
+    background: none;
+}
+
+::-webkit-scrollbar-track {
+    background: none;
+}
+
+::-webkit-scrollbar-thumb {
+    max-width: 0.5rem;
+    background-color: rgb(209 213 219 / var(--tw-text-opacity, 1));
+    border-radius: 0.125rem;
+    transition: all 1s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(229 231 235 / var(--tw-text-opacity, 1));
+    border-radius: 0.25rem;
+}
