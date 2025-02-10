@@ -1,4 +1,4 @@
-<div class="min-w-full h-full border-none rounded-lg">
+<div class="min-w-full h-full data-table-view border-none rounded-lg overflow-x-scroll">
     <table class="table-auto border-none min-w-full rounded-lg">
         <thead>
             <tr class="bg-gray-200 rounded-t-lg border-none">
