@@ -1,9 +1,9 @@
 <div class="min-w-full h-full data-table-view border-none rounded-lg overflow-x-scroll">
     <table class="table-auto border-none min-w-full rounded-lg">
         <thead>
-            <tr class="bg-gray-200 rounded-t-lg border-none">
+            <tr class="bg-gray-100 dark:bg-gray-900 rounded-t-lg border-none">
                 @foreach ($columns as $column)
-                    <th class="border-none first:rounded-tl-lg text-left px-4 py-2 uppercase font-bold text-sm">
+                    <th class="border-none first:rounded-tl-lg text-left text-gray-900 dark:text-gray-100 px-4 py-2 uppercase font-bold text-sm">
                         {{ $column }}
                     </th>
                 @endforeach
@@ -12,7 +12,7 @@
                 </th>
             </tr>
         </thead>
-        <tbody class="dark:bg-white rounded-b-lg">
+        <tbody class="dark:bg-gray-200 rounded-b-lg">
             @if (count($rows) > 0)
                 @foreach ($rows as $indexRow => $row)
                     <tr class="max-h-12 last:rounded-b-lg border-none bg-none">
