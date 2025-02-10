@@ -39,7 +39,7 @@
                                     Bandeira <i>{{ $flag->name }}</i>
                                 </label>
                             </div>
-                            <div class="py-2 px-2 flex flex-col justify-start items center gap-2 ">
+                            <div class="py-2 px-4 flex flex-col justify-start items center gap-2 ">
                                 @foreach ($flag->units as $unit)
                                     @if (count($unit->employees) > 0)
                                         <div class="flex justify-start items-center gap-2 mb-2">
@@ -56,7 +56,7 @@
                                                 Unidade <i>{{ $unit->name }}</i>
                                             </label>
                                         </div>
-                                        <div class="py-2 flex flex-col justify-start items center gap-2 max-h-[90px] overflow-y-auto">
+                                        <div class="py-2 px-4 flex flex-col justify-start items center gap-2 max-h-[90px] overflow-y-auto">
                                             @foreach ($unit->employees as $employee)
                                                 <div class="flex justify-start gap-2 pl-2 items-center">
                                                     <input
@@ -70,10 +70,10 @@
                                                     >
                                                     <label for="employees[{{$employee->id}}]" class="text-gray-300 font-semibold text-sm">
                                                         <div class="flex justify-start items-center gap-4">
-                                                            <div class="w-44 max-w-44 text-ellipsis text-nowrap overflow-x-hidden pr-2 border-r-2 dark:border-gray-900 border-indigo-600">
+                                                            <div class="w-44 max-w-44 text-ellipsis text-nowrap overflow-x-hidden pr-2 border-r-2 text-gray-600 dark:text-gray-300 dark:border-gray-900 border-indigo-600">
                                                                 {{ $employee->name }}
                                                             </div>
-                                                            <div class="w-44">
+                                                            <div class="w-44 text-gray-600 dark:text-gray-300">
                                                                 {{ $employee->cpf }}
                                                             </div>
                                                         </div>
