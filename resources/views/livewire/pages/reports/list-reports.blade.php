@@ -12,8 +12,14 @@
                     class="block w-4/6"
                     placeholder="Nome do reporte"
                 />
-                <x-primary-button class="w-2/6 flex justify-center text-center">
+                <x-primary-button class="w-2/6 hidden justify-center text-center sm:flex">
                     Pesquisar
+                </x-danger-button>
+                <x-primary-button class="w-14 flex justify-center text-center sm:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.3-4.3"/>
+                    </svg>
                 </x-danger-button>
             </div>
         </form>
