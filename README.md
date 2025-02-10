@@ -39,6 +39,10 @@ CREATE DATABASE vochtestedb;
 
 Configurar o arquivo .env (já está configurado para MySQL, mas confira os detalhes):
 
+APP_TIMEZONE="America/Sao_Paulo"
+
+APP_LOCALE=pt_BR
+
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
