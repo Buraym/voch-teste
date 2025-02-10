@@ -689,7 +689,7 @@ class ReportController extends Controller
         
         $reportsFound = $this->report->where("name", "LIKE", "%{$query}%")
             ->get()
-            ->map(fn($report) => [$report->id, $report->name, $report->id, $report->name, $report->url, date('d/m/Y - H:i:s', strtotime($report->created_at))])
+            ->map(fn($report) => [$report->id, $report->name, date('d/m/Y - H:i:s', strtotime($report->created_at))])
             ->toArray();
         
         return redirect()->route("reports", $query == "" ? [] : compact("query", "reportsFound"));

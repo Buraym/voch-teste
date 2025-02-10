@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.data-table-view::-webkit-scrollbar {
+    display: none !important;
+}
+
 ::-webkit-scrollbar {
     background: none;
 }

@@ -41,10 +41,10 @@
                             >
                             <label for="employees[{{$employee->id}}]" class="text-gray-300 font-semibold text-sm">
                                 <div class="flex justify-start items-center gap-4">
-                                    <div class="w-44 max-w-44 text-ellipsis text-nowrap overflow-x-hidden pr-2 border-r-2 dark:border-gray-900 border-indigo-600">
+                                    <div class="w-44 max-w-44 text-ellipsis text-nowrap overflow-x-hidden pr-2 border-r-2 text-gray-600 dark:text-gray-300 dark:border-gray-900 border-indigo-600">
                                         {{ $employee->name }}
                                     </div>
-                                    <div class="w-44">
+                                    <div class="w-44 text-gray-600 dark:text-gray-300">
                                         {{ $employee->cpf }}
                                     </div>
                                 </div>

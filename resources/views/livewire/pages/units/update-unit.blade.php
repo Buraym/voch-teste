@@ -58,14 +58,27 @@
             </p>
             @if (count($unit->employees) > 0)
             <div class="py-2 flex flex-col jsutify-start items center gap-2 mb-4">
-                <p class="mb-2 text-sm text-gray-600 dark:text-gray-400">
-                    Colaboradores desta unidade
-                </p>
-                @foreach ($unit->employees as $employee)
-                    <a href="{{ route('employee', $employee->id) }}" wire:navigate class="flex justify-center items-center h-10 rounded-lg hover:bg-gray-400 hover:text-gray-900 transition-all dark:bg-white hover">
-                        <i>{{ $employee->name }}</i>
-                    </a>
-                @endforeach
+                <div class="flex justify-start items-center mb-2 gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-user text-gray-600 dark:text-gray-400">
+                        <path d="M15 13a3 3 0 1 0-6 0"/>
+                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/>
+                        <circle cx="12" cy="8" r="2"/>
+                    </svg>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 font-bold">
+                        Colaboradores desta unidade
+                    </p>
+                </div>
+                <div class="px-4 flex flex-col justify-start items-start mb-2 gap-2">
+                    @foreach ($unit->employees as $employee)
+                        <a href="{{ route('employee', $employee->id) }}" wire:navigate.hover class="flex gap-2 text-gray-600 dark:text-gray-400">
+                            <i>• {{ $employee->name }}</i>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right">
+                                <path d="M7 7h10v10"/>
+                                <path d="M7 17 17 7"/>
+                            </svg>
+                        </a>
+                    @endforeach
+                </div>
             </div>
             @endif
             <div class="flex gap-2">

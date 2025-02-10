@@ -12,12 +12,18 @@
                     class="block w-4/6"
                     placeholder="Nome do grupo"
                 />
-                <x-primary-button class="w-2/6 flex justify-center text-center">
+                <x-primary-button class="w-2/6 hidden justify-center text-center sm:flex">
                     Pesquisar
-                </x-danger-button>
+                </x-primary-button>
+                <x-primary-button class="w-14 flex justify-center text-center sm:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.3-4.3"/>
+                    </svg>
+                </x-primary-button>
             </div>
         </form>
-        <a href="{{ route('add-group') }}" wire:navigate class="flex justify-center items-center h-10 w-10 rounded-lg hover:bg-gray-400 hover:text-gray-900 transition-all dark:bg-white hover">
+        <a href="{{ route('add-group') }}" wire:navigate class="flex justify-center items-center h-10 w-10 rounded-lg dark:bg-gray-900 dark:text-white hover:bg-gray-400 hover:text-gray-900 transition-all hover">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus">
                 <path d="M5 12h14"/><path d="M12 5v14"/>
             </svg>
