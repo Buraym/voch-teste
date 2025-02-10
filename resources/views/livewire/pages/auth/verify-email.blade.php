@@ -30,22 +30,22 @@ $logout = function (Logout $logout) {
 
 <div>
     <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
+        Obrigado por se inscrever! Antes de começar, você poderia verificar seu endereço de e-mail clicando no link que acabamos de enviar para você? Se você não recebeu o e-mail, teremos prazer em enviar outro.
     </div>
 
     @if (session('status') == 'verification-link-sent')
         <div class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
-            {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+            Um novo link de verificação foi enviado para o endereço de e-mail que você forneceu durante o registro.
         </div>
     @endif
 
     <div class="mt-4 flex items-center justify-between">
         <x-primary-button wire:click="sendVerification">
-            {{ __('Resend Verification Email') }}
+            Reenviar e-mail de verificação
         </x-primary-button>
 
         <button wire:click="logout" type="submit" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-            {{ __('Log Out') }}
+            Desconectar-se
         </button>
     </div>
 </div>

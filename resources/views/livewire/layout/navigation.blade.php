@@ -76,14 +76,14 @@ $logout = function (Logout $logout) {
                         </x-dropdown-link>
 
                         <x-dropdown-link :href="route('profile')" wire:navigate>
-                            {{ __('Profile') }}
+                            Perfil
                         </x-dropdown-link>
                         
 
                         <!-- Authentication -->
                         <button wire:click="logout" class="w-full text-start">
                             <x-dropdown-link>
-                                {{ __('Log Out') }}
+                                Desconectar-se
                             </x-dropdown-link>
                         </button>
                     </x-slot>
@@ -148,13 +148,13 @@ $logout = function (Logout $logout) {
                 </x-responsive-nav-link>
 
                 <x-responsive-nav-link :href="route('profile')" wire:navigate>
-                    {{ __('Profile') }}
+                    Perfil
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->
                 <button wire:click="logout" class="w-full text-start">
                     <x-responsive-nav-link>
-                        {{ __('Log Out') }}
+                        Desconectar-se
                     </x-responsive-nav-link>
                 </button>
             </div>
